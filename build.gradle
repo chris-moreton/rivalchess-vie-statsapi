@@ -1,0 +1,80 @@
+buildscript {
+    ext.kotlin_version = '1.4.10'
+    ext.spring_boot_version = '2.1.0.RELEASE'
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'maven'
+    id 'signing'
+    id 'maven-publish'
+    id 'org.jetbrains.kotlin.jvm' version "$kotlin_version"
+}
+
+apply plugin: "kotlin-spring"
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = "com.netsensia.rivalchess"
+version = '1.0.0'
+jar.baseName("rivalchess-vie-generator")
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+configurations {
+    runtime.exclude group: "org.slf4j", module: "slf4j-log4j12"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+
+    compile("org.springframework.boot:spring-boot-starter-web:2.3.4.RELEASE") {
+        exclude group: "spring-boot-starter-log4j2"
+    }
+    compile("org.springframework.boot:spring-boot-starter-data-redis")
+    compile 'redis.clients:jedis:2.9.0'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.4.0-M1'
+    compile 'redis.clients:jedis:2.9.0'
+    implementation 'com.netsensia.rivalchess:rivalchess-vie-model:3.1.0'
+    implementation 'com.netsensia.rivalchess:rivalchess-vie-utils:25.0.3'
+}
+
+test {
+    useJUnit()
+    maxHeapSize = '1G'
+    testLogging.showStandardStreams = true
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
