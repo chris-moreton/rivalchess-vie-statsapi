@@ -47,16 +47,14 @@ repositories {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
+    implementation 'redis.clients:jedis:2.9.0'
 
     compile("org.springframework.boot:spring-boot-starter-web:2.3.4.RELEASE") {
         exclude group: "spring-boot-starter-log4j2"
     }
-    compile("org.springframework.boot:spring-boot-starter-data-redis")
-    compile 'redis.clients:jedis:2.9.0'
-
+    implementation 'com.google.code.gson:gson:2.8.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.4.0-M1'
-    compile 'redis.clients:jedis:2.9.0'
     implementation 'com.netsensia.rivalchess:rivalchess-vie-model:3.1.0'
     implementation 'com.netsensia.rivalchess:rivalchess-vie-utils:25.0.3'
 }
