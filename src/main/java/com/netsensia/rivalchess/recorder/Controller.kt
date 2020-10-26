@@ -2,13 +2,9 @@ package com.netsensia.rivalchess.recorder
 
 import com.netsensia.rivalchess.recorder.model.RivalStatistics
 import com.netsensia.rivalchess.recorder.service.RedisService
-import com.netsensia.rivalchess.vie.model.MatchUpStats
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class Controller {
@@ -17,6 +13,7 @@ class Controller {
     private lateinit var redisService: RedisService
 
     @GetMapping("/matchUpStats")
+    @CrossOrigin(origins = arrayOf("http://localhost:3000"))
     fun stats(): ResponseEntity<RivalStatistics> {
         val rivalStatistics = redisService.getRivalStatistics()
 
@@ -24,11 +21,15 @@ class Controller {
     }
 
     @PostMapping("/matchUpStats")
+    @CrossOrigin(origins = arrayOf("http://localhost:3000"))
     fun matchUpStats(@RequestBody matchUpStats: MatchUpsPayload): ResponseEntity<AcceptedPayload> {
 
         println("Received $matchUpStats")
 
-        redisService.set("rivalStatistics", ResponsePayload(matchUpStats.matchUps))
+        redisService.set("rivalStatistics", RivalStatistics(
+                matchUpStats.matchUps,
+                matchUpStats.rankings)
+        )
 
         return ResponseEntity.accepted().body(AcceptedPayload())
     }

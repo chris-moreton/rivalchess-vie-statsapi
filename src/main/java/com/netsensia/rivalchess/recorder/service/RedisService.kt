@@ -19,7 +19,7 @@ class RedisService {
     fun getCacheService(): Jedis {
         if (jedis == null) {
             if (url.equals("mock")) {
-                val server = RedisServer.newRedisServer();  // bind to a random port
+                val server = RedisServer.newRedisServer();
                 server.start();
                 jedis = Jedis(server.host, server.bindPort)
             } else {
