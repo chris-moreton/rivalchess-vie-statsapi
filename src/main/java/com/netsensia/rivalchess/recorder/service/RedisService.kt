@@ -36,6 +36,7 @@ class RedisService {
 
     fun getRivalStatistics(): RivalStatistics {
         val json = getCacheService().get("rivalStatistics")
+        println("Got stats from cache: ${json}")
         return gson.fromJson(json, RivalStatistics::class.java)
     }
 

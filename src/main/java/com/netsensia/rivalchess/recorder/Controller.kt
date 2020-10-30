@@ -13,7 +13,9 @@ class Controller {
     private lateinit var redisService: RedisService
 
     @GetMapping("/matchUpStats")
-    @CrossOrigin(origins = arrayOf("http://localhost:3000"))
+    @CrossOrigin(origins = arrayOf(
+            "http://localhost:3000",
+            "http://rivalchess-dashboard-lb-544976857.eu-west-2.elb.amazonaws.com"))
     fun stats(): ResponseEntity<RivalStatistics> {
         val rivalStatistics = redisService.getRivalStatistics()
 
@@ -21,14 +23,17 @@ class Controller {
     }
 
     @PostMapping("/matchUpStats")
-    @CrossOrigin(origins = arrayOf("http://localhost:3000"))
+    @CrossOrigin(origins = arrayOf(
+            "http://localhost:3000",
+            "http://rivalchess-dashboard-lb-544976857.eu-west-2.elb.amazonaws.com"))
     fun matchUpStats(@RequestBody matchUpStats: MatchUpsPayload): ResponseEntity<AcceptedPayload> {
 
         println("Received $matchUpStats")
 
         redisService.set("rivalStatistics", RivalStatistics(
                 matchUpStats.matchUps,
-                matchUpStats.rankings)
+                matchUpStats.rankings,
+                matchUpStats.matchUpsConsolidated)
         )
 
         return ResponseEntity.accepted().body(AcceptedPayload())
