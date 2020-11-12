@@ -17,9 +17,17 @@ class Controller {
             "http://localhost:3000",
             "http://rivalchess-dashboard-lb-544976857.eu-west-2.elb.amazonaws.com"))
     fun stats(): ResponseEntity<RivalStatistics> {
-        val rivalStatistics = redisService.getRivalStatistics()
-
-        return ResponseEntity.ok().body(rivalStatistics)
+        (0..10).forEach {
+            try {
+                val rivalStatistics = redisService.getRivalStatistics()
+                return ResponseEntity.ok().body(rivalStatistics)
+            } catch (e: Exception) {
+                println("ERROR")
+                println(e.message)
+                Thread.sleep(1)
+            }
+        }
+        return ResponseEntity.ok().body(RivalStatistics(listOf(), listOf(), listOf()))
     }
 
     @PostMapping("/matchUpStats")
